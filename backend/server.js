@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 require('dotenv').config();
 
 const contactRoutes = require('./routes/contact');
@@ -8,13 +9,11 @@ const contactRoutes = require('./routes/contact');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
+// Middleware - allow all origins in production
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production'
-    ? '*'
-    : ['http://localhost:5173', 'http://127.0.0.1:5173'],
+  origin: '*',
   methods: ['GET', 'POST'],
-  credentials: true,
+  credentials: false,
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -31,11 +30,18 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Serve static frontend in production
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../frontend/dist')));
+// Always serve the React frontend if the dist folder exists
+const distPath = path.join(__dirname, '../frontend/dist');
+if (fs.existsSync(distPath)) {
+  console.log('✅ Serving frontend from:', distPath);
+  app.use(express.static(distPath));
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
+    res.sendFile(path.join(distPath, 'index.html'));
+  });
+} else {
+  console.log('ℹ️  No frontend dist folder found. Running in API-only mode.');
+  app.get('/', (req, res) => {
+    res.json({ message: 'Portfolio API is running. Frontend not built yet.' });
   });
 }
 
