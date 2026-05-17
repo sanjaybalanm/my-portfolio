@@ -39,7 +39,18 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
   console.log(`📧 Contact endpoint: http://localhost:${PORT}/api/contact`);
+});
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`\n❌ Port ${PORT} is already in use.`);
+    console.error(`   Run this to free it: netstat -ano | findstr :${PORT}`);
+    console.error(`   Then: taskkill /PID <PID> /F\n`);
+    process.exit(1);
+  } else {
+    throw err;
+  }
 });

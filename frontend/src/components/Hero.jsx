@@ -68,7 +68,19 @@ export default function Hero() {
           </div>
         </div>
         <div className="hero-avatar">
-          <img src="/avatar.png" alt="Sanjay Balan M" onError={e => { e.target.style.display='none'; e.target.parentElement.style.display='flex'; e.target.parentElement.style.alignItems='center'; e.target.parentElement.style.justifyContent='center'; e.target.parentElement.style.fontSize='72px'; e.target.parentElement.textContent='👨‍💻'; }} />
+          <img
+            src="/avatar.png"
+            alt="Sanjay Balan M"
+            style={{ objectFit: 'cover', objectPosition: 'top center' }}
+            onError={e => {
+              e.target.style.display = 'none';
+              e.target.parentElement.style.display = 'flex';
+              e.target.parentElement.style.alignItems = 'center';
+              e.target.parentElement.style.justifyContent = 'center';
+              e.target.parentElement.style.fontSize = '72px';
+              e.target.parentElement.textContent = '👨‍💻';
+            }}
+          />
         </div>
       </div>
     </section>
