@@ -1,15 +1,25 @@
 services:
+  # ── Backend API (Web Service) ──────────────────────────────────────────────
   - type: web
-    name: my-portfolio
+    name: my-portfolio-api
     env: node
-    buildCommand: "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend"
-    startCommand: "node backend/server.js"
+    rootDir: backend
+    buildCommand: "npm install"
+    startCommand: "node server.js"
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 10000
       - key: EMAIL_USER
         sync: false
       - key: EMAIL_PASS
         sync: false
+
+  # ── Frontend (Static Site) ─────────────────────────────────────────────────
+  - type: web
+    name: my-portfolio-frontend
+    env: static
+    rootDir: frontend
+    buildCommand: "npm install && npm run build"
+    staticPublishPath: ./dist
+    pullRequestPreviewsEnabled: true
+
