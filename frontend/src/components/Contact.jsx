@@ -24,8 +24,10 @@ export default function Contact() {
     e.preventDefault();
     setStatus('loading');
     setMsg('');
+    // Use the backend API URL from env var in production, or relative path in local dev
+    const apiBase = import.meta.env.VITE_API_URL || '';
     try {
-      const res = await fetch('/api/contact', {
+      const res = await fetch(`${apiBase}/api/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
