@@ -2,7 +2,7 @@ services:
   - type: web
     name: my-portfolio
     env: node
-    buildCommand: "chmod +x build.sh && ./build.sh"
+    buildCommand: "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend"
     startCommand: "node backend/server.js"
     envVars:
       - key: NODE_ENV
